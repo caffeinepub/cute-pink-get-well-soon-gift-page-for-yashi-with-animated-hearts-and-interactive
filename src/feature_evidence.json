@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-replace-the-wishes-page-ui-in-frontend-src-pages-wishespage-tsx-with-a-minimal-admin-view-that-calls-getallwishes-and-displays-wishes-in-a-clean-table-or-list-with-a-visible-refresh-button-that-reloads-the-list-on-demand",
-      "featureTitle": "Replace the `/wishes` page UI in `frontend/src/pages/WishesPage.tsx` with a minimal admin view that calls `getAllWishes()` and displays wishes in a clean table or list, with a visible \"Refresh\" button that reloads the list on demand.",
+      "featureId": "feature-replace-the-current-tanstack-router-setup-in-frontend-src-app-tsx-with-react-router-dom-hash-routing-by-explicitly-importing-hashrouter-routes-and-route-from-react-router-dom-wrapping-the-app-in-hashrouter-and-defining-exactly-these-routes-route-path-element-home-and-route-path-wishes-element-adminwishes",
+      "featureTitle": "Replace the current TanStack Router setup in `frontend/src/App.tsx` with `react-router-dom` hash routing by explicitly importing `HashRouter`, `Routes`, and `Route` from `react-router-dom`, wrapping the app in `<HashRouter>`, and defining exactly these routes: `<Route path=\"/\" element={<Home />} />` and `<Route path=\"/wishes\" element={<AdminWishes />} />`.",
       "files": [
-        "frontend/src/pages/WishesPage.tsx"
+        "frontend/src/App.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -15,7 +15,25 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-21"
+        "REQ-33"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-verify-and-fix-routing-behavior-so-that-navigating-directly-to-https-cutiepie-uhp-caffeine-xyz-wishes-or-locally-wishes-does-not-show-the-homepage-content-as-a-fallback-and-the-admin-wishes-page-is-the-only-rendered-page-content-for-that-route",
+      "featureTitle": "Verify and fix routing behavior so that navigating directly to `https://cutiepie-uhp.caffeine.xyz/#/wishes` (or locally `/#/wishes`) does not show the homepage content as a fallback, and the admin wishes page is the only rendered page content for that route.",
+      "files": [
+        "frontend/src/App.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-34"
       ],
       "confidence": "high"
     }

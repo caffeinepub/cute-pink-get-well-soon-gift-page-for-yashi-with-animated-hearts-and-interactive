@@ -1,44 +1,53 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-10T10:21:08.263Z",
-  "summary": "Frontend `/wishes` page was replaced with a refreshable list UI using `useGetAllWishes()` and a manual Refresh button with loading/error/empty states. Backend was modified to add `submitWish`/`getAllWishes` and a new `backend/migration.mo` was introduced, but the diff summary does not provide clear evidence that the wishes store is stable/upgrade-safe or that declarations/candid were regenerated.",
+  "generatedAt": "2026-02-10T11:26:57.109Z",
+  "summary": "The diff updates `frontend/src/App.tsx` routing, but it keeps TanStack Router with `createHashHistory` and `RouterProvider` instead of replacing it with `react-router-dom` `HashRouter/Routes/Route`. As a result, the explicit REQ-33 route setup and REQ-34 constraints about having no Home fallback outside `path=\"/\"` are not implemented as specified.",
   "missing_requirements": [
     {
-      "id": "REQ-20",
-      "requirement": "Persist wishes across canister upgrades using stable, upgrade-safe storage, and return them in submission order.",
-      "reason": "The backend implementation shows `let wishes = List.empty<Text>();` inside the actor, but the diff summary does not show any `stable` variable usage or explicit preupgrade/postupgrade handling to guarantee persistence across upgrades. The added `backend/migration.mo` suggests a migration approach, but the provided `backend/main.mo` snippet does not show stable state definitions being migrated from/to stable memory.",
+      "id": "REQ-33",
+      "requirement": "Replace the current TanStack Router setup in `frontend/src/App.tsx` with `react-router-dom` hash routing by importing `HashRouter`, `Routes`, and `Route`, wrapping the app in `<HashRouter>`, and defining exactly: `<Route path=\"/\" element={<Home />} />` and `<Route path=\"/wishes\" element={<AdminWishes />} />`.",
+      "reason": "`App.tsx` still imports and uses TanStack Router (`RouterProvider`, `createRouter`, `createRoute`, `createHashHistory`) and does not import or use `HashRouter`, `Routes`, or `Route` from `react-router-dom`.",
       "evidence": [
-        "backend/main.mo",
-        "backend/migration.mo"
+        "frontend/src/App.tsx"
       ]
     },
     {
-      "id": "REQ-23",
-      "requirement": "Regenerate backend Candid/declarations so frontend actor typing/bindings remain consistent with the updated canister interface.",
-      "reason": "The diff summary does not show changes to any generated declaration files (e.g., `declarations/...`), candid files, or other artifacts that would indicate regeneration of bindings after updating `backend/main.mo`.",
+      "id": "REQ-34",
+      "requirement": "Fix routing so that direct navigation/hard refresh to `/#/wishes` renders only `AdminWishes` with no Home fallback/flash, and ensure there is no route configuration rendering `Home` outside `path=\"/\"`.",
+      "reason": "The required `react-router-dom` HashRouter-based route configuration is not present in the diff, so the requested verification/fix (as specified in REQ-34) is not implemented in the manner required.",
       "evidence": [
-        "backend/main.mo",
-        "frontend/src/hooks/useQueries.ts (referenced via frontend-file-summaries.txt, but no diff shown for regenerated bindings)"
+        "frontend/src/App.tsx"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Added a backend state migration module even though a migration is only to be used if an actual state migration is required.",
-      "reason": "A new `backend/migration.mo` was added and `backend/main.mo` was modified to reference it (`import Migration \"migration\"; (with migration = Migration.run)`), but the diff summary does not establish that an actual state migration was necessary for this change.",
+      "description": "Continued/expanded use of TanStack Router with explicit hash-history configuration (`createHashHistory`) and RouterProvider-based setup instead of switching to `react-router-dom` HashRouter.",
+      "reason": "The BuildRequest explicitly requires replacing TanStack Router in `App.tsx` with `react-router-dom` `HashRouter`, `Routes`, and `Route`, but the diff implements hash routing via TanStack Router instead.",
       "evidence": [
-        "backend/migration.mo",
-        "backend/main.mo"
+        "frontend/src/App.tsx"
+      ]
+    },
+    {
+      "description": "TanStack Router type-safety registration via `declare module '@tanstack/react-router' { interface Register { router: typeof router; } }`.",
+      "reason": "Not requested by the BuildRequest, which instead requires a `react-router-dom` route definition in `App.tsx`.",
+      "evidence": [
+        "frontend/src/App.tsx"
+      ]
+    },
+    {
+      "description": "TanStack Router preload behavior configuration (`defaultPreload: 'intent'`).",
+      "reason": "Not requested; the BuildRequest only asks for `react-router-dom` HashRouter routing with two exact routes.",
+      "evidence": [
+        "frontend/src/App.tsx"
       ]
     }
   ],
-  "confidence": 0.64,
+  "confidence": 0.9,
   "changed_files": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/pages/WishesPage.tsx",
+    "frontend/src/App.tsx",
     "project_state.json"
   ]
 }

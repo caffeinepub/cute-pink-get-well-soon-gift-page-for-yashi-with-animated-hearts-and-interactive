@@ -1,67 +1,41 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Minimal hidden /wishes admin list with manual refresh and up-to-date declarations",
+  "title": "Switch App.tsx to react-router-dom HashRouter with exact / and /wishes routes",
   "requirements": [
     {
-      "id": "REQ-21",
-      "summary": "Replace the /wishes page UI with a minimal admin list that fetches via getAllWishes() and supports manual refresh.",
+      "id": "REQ-33",
+      "summary": "Replace TanStack Router in App.tsx with react-router-dom HashRouter and define only / and /wishes routes.",
       "acceptanceCriteria": [
-        "Visiting `/wishes` fetches wishes using the existing backend actor and `getAllWishes()` (no localStorage-based data source).",
-        "A \"Refresh\" button is present and triggers a refetch so new wishes appear without a full page reload.",
-        "The page renders a clean list/table of wish text; if timestamps are not available from the backend, only the text is shown.",
-        "The page includes basic loading, error, and empty states."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/WishesPage.tsx",
-          "operation": "modify",
-          "description": "Replace the current wishes page layout with a minimal admin view: render a simple list/table of wish text, add a visible \"Refresh\" button that triggers a React Query refetch, and keep basic loading/error/empty states. Use shadcn-ui components (e.g., Button/Card) where appropriate for consistent styling; verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Ensure `useGetAllWishes()` cleanly exposes refetching behavior (via React Query's returned `refetch`) and continues to fetch through the backend actor's `getAllWishes()` (no local cache/localStorage data source)."
-        }
-      ]
-    },
-    {
-      "id": "REQ-22",
-      "summary": "Keep the /wishes admin page hidden from the main gift UI (no navigation link), while remaining reachable by direct URL.",
-      "acceptanceCriteria": [
-        "No new link/button is added on the main `/` gift experience that points to `/wishes`.",
-        "Direct navigation to `/wishes` continues to render the wishes admin page."
+        "`frontend/src/App.tsx` uses `HashRouter`, `Routes`, and `Route` from `react-router-dom` (no TanStack Router usage remains in App.tsx).",
+        "Visiting `/#/` renders the `Home` page UI (hero, hearts rain, gift box, footer).",
+        "Visiting `/#/wishes` renders the `AdminWishes` page UI and does NOT render any `Home`-only content (including the GiftBox and any fireworks triggered from it)."
       ],
       "file_operations": [
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Confirm routing continues to render `WishesPage` only when `window.location.pathname === '/wishes'` and ensure the main gift experience does not add any link/button/menu item pointing to `/wishes`."
-        },
-        {
-          "path": "frontend/src/components/GiftBox.tsx",
-          "operation": "modify",
-          "description": "Verify the main gift experience UI does not contain any navigation element that points to `/wishes`; remove/avoid adding any such link if present."
+          "description": "Remove TanStack Router usage and implement react-router-dom hash routing by importing HashRouter, Routes, and Route; wrap the app in <HashRouter>; and define exactly these routes: path \"/\" -> <Home /> and path \"/wishes\" -> <AdminWishes /> (no other routes or fallback rendering)."
         }
       ]
     },
     {
-      "id": "REQ-23",
-      "summary": "Update frontend declarations/bindings to stay consistent with the regenerated backend canister interface.",
+      "id": "REQ-34",
+      "summary": "Ensure direct navigation/refresh to #/wishes renders only AdminWishes without Home fallback or flash.",
       "acceptanceCriteria": [
-        "Frontend builds with up-to-date generated declarations reflecting the backend canister interface.",
-        "`useGetAllWishes()` and `useSubmitWish()` continue to typecheck and run against the regenerated declarations."
+        "On a hard refresh while the browser URL hash is `#/wishes`, the first rendered page is `AdminWishes` (no flash of `Home` content that remains on screen).",
+        "There is no route configuration that renders `Home` outside of the `path=\"/\"` route."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/backend.d.ts",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update the frontend actor type declarations to match the regenerated canister interface so `submitWish(text: string): Promise<void>` and `getAllWishes(): Promise<Array<string>>` are correctly represented and `useActor`/React Query hooks continue to typecheck."
+          "description": "Double-check the HashRouter + Routes configuration does not render Home outside the \"/\" route (no layout/shared wrapper that includes Home content; no wildcard route that points to Home; ensure /wishes maps only to AdminWishes)."
         },
         {
-          "path": "frontend/src/hooks/useActor.ts",
-          "operation": "modify",
-          "description": "Adjust imports/types as needed to align with the updated generated declarations so the actor type remains consistent and the app compiles."
+          "path": "frontend/src/App.hashrouting.test.tsx",
+          "operation": "create",
+          "description": "Add a lightweight routing regression test that mounts <App /> with the window location hash set to \"#/wishes\" and asserts AdminWishes content is present while Home-only content (e.g., GiftBox/hero text) is absent, preventing future fallback/flash regressions."
         }
       ]
     }

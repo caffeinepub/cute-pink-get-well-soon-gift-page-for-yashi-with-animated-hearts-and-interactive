@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 13,
-  "summary": "Pink-themed \"Get Well Soon\" gift webpage for Yashi; backend-persisted wish submissions (stable storage) with submitWish/getAllWishes Candid API; frontend WishPanel submits to backend (not localStorage); replace the planned admin /wishes route with a hidden (no navigation link) simple list/table view that calls getAllWishes(), includes a Refresh button, and shows timestamps if available (otherwise just wish text). Deployment/publish flow still requires backend/main.mo to define a valid actor interface for Candid generation (useActor.ts).",
+  "projectStateVersion": 23,
+  "summary": "Pink-themed \"Get Well Soon\" gift webpage for Yashi; backend-persisted wish submissions (stable storage) with submitWish/getAllWishes Candid API; frontend WishPanel submits to backend (not localStorage); `/wishes` is a hidden (no navigation link) simple list/table view that calls getAllWishes(), includes a Refresh button, and shows timestamps if available (otherwise just wish text). Routing must use HashRouter (not BrowserRouter) due to IC hosting, so the admin page is accessed at `https://cutiepie-uhp.caffeine.xyz/#/wishes`. Deployment/publish flow still requires backend/main.mo to define a valid actor interface for Candid generation (useActor.ts).",
   "architectural_notes": [
     "Deliver as a single self-contained index.html with embedded CSS and JavaScript.",
     "Only external dependency allowed: Google Fonts (optionally lightweight CDN animation assets if needed).",
@@ -17,9 +17,12 @@
   "known_issues": [
     "Publish/deployment failing with configuration error because backend/main.mo is empty while the frontend build pipeline (useActor.ts) expects a valid actor/Candid interface.",
     "Publish blocked by domain validation: domain must be 5–50 characters and contain only letters, numbers, and hyphens (previous domain \"Cutie_Pie\" invalid due to underscore).",
-    "Current WishPanel saves wishes only to visitor localStorage, so the site owner cannot read submitted wishes from other users/browsers."
+    "Current WishPanel saves wishes only to visitor localStorage, so the site owner cannot read submitted wishes from other users/browsers.",
+    "/wishes route currently loads the homepage content because App.tsx renders landing page components directly without URL-based routing; needs react-router-dom Routes/Route refactor so /wishes renders the admin wishes page.",
+    "Routing still shows homepage at `/wishes` when using `BrowserRouter` on IC hosting; requires switching to `HashRouter` so admin page is reachable at `#/wishes`.",
+    "Deployed site: navigating to `/#/wishes` still renders the Home page (GiftBox/Fireworks), indicating HashRouter/Routes in App.tsx are not correctly switching to the AdminWishes component."
   ],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-create-a-single-page-mobile-first-react-ui-that-visually-matches-a-cute-pastel-pink-get-well-soon-gift-site-dedicated-to-yashi-including-a-cozy-background-clouds-blanket-like-gradient-hearts-flowers-motif-gentle-sparkles-and-consistently-applied-playful-typography-using-google-fonts-e-g-fredoka-one-poppins",
@@ -132,6 +135,70 @@
         "REQ-21"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-publish-deploy-the-project-under-the-app-domain-cutiepie-and-verify-the-deployed-site-is-reachable-and-functional",
+      "title": "Publish/deploy the project under the app domain `Cutiepie` and verify the deployed site is reachable and functional.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-new-page-component-at-frontend-src-pages-home-tsx-and-move-all-current-landing-page-ui-logic-out-of-frontend-src-app-tsx-into-home-tsx-hero-headline-heartsrain-caringmessages-giftbox-including-its-fireworks-behavior-and-footer",
+      "title": "Create a new page component at `frontend/src/pages/Home.tsx` and move all current landing-page UI/logic out of `frontend/src/App.tsx` into `Home.tsx` (Hero headline, `HeartsRain`, `CaringMessages`, `GiftBox` including its fireworks behavior, and `Footer`).",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-new-admin-page-component-at-frontend-src-pages-adminwishes-tsx-and-place-the-wishes-admin-logic-ui-there-reuse-the-existing-frontend-src-pages-wishespage-tsx-implementation-if-desired-but-the-routed-component-for-wishes-must-be-adminwishes",
+      "title": "Create a new admin page component at `frontend/src/pages/AdminWishes.tsx` and place the `/wishes` admin logic/UI there. Reuse the existing `frontend/src/pages/WishesPage.tsx` implementation if desired, but the routed component for `/wishes` must be `AdminWishes`.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-rewrite-frontend-src-app-tsx-to-use-react-router-dom-routing-with-routes-and-route-so-that-renders-home-and-wishes-renders-adminwishes-ensure-the-router-is-set-up-such-that-homepage-only-components-do-not-render-on-wishes",
+      "title": "Rewrite `frontend/src/App.tsx` to use `react-router-dom` routing with `<Routes>` and `<Route>` so that `/` renders `<Home />` and `/wishes` renders `<AdminWishes />`. Ensure the router is set up such that homepage-only components do not render on `/wishes`.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-frontend-router-configuration-to-use-hash-based-routing-so-the-admin-page-is-reachable-at-https-cutiepie-uhp-caffeine-xyz-wishes-and-does-not-render-the-homepage-content-when-navigating-to-the-wishes-route-apply-this-change-at-the-router-definition-location-currently-frontend-src-app-tsx-uses-tanstack-react-router-configuring-the-router-to-use-a-hash-history-implementation-rather-than-browser-history",
+      "title": "Update the frontend router configuration to use hash-based routing so the admin page is reachable at `https://cutiepie-uhp.caffeine.xyz/#/wishes` and does not render the homepage content when navigating to the wishes route. Apply this change at the router definition location (currently `frontend/src/App.tsx` uses `@tanstack/react-router`), configuring the router to use a hash history implementation rather than browser history.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-publish-deploy-the-project-under-the-existing-app-domain-cutiepie-and-verify-the-deployed-site-is-reachable-and-functional-at-both-the-home-route-and-the-admin-wishes-route",
+      "title": "Publish/deploy the project under the existing app domain `Cutiepie`, and verify the deployed site is reachable and functional at both the home route and the admin wishes route.",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-current-tanstack-router-setup-in-frontend-src-app-tsx-with-react-router-dom-hash-routing-by-explicitly-importing-hashrouter-routes-and-route-from-react-router-dom-wrapping-the-app-in-hashrouter-and-defining-exactly-these-routes-route-path-element-home-and-route-path-wishes-element-adminwishes",
+      "title": "Replace the current TanStack Router setup in `frontend/src/App.tsx` with `react-router-dom` hash routing by explicitly importing `HashRouter`, `Routes`, and `Route` from `react-router-dom`, wrapping the app in `<HashRouter>`, and defining exactly these routes: `<Route path=\"/\" element={<Home />} />` and `<Route path=\"/wishes\" element={<AdminWishes />} />`.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-and-fix-routing-behavior-so-that-navigating-directly-to-https-cutiepie-uhp-caffeine-xyz-wishes-or-locally-wishes-does-not-show-the-homepage-content-as-a-fallback-and-the-admin-wishes-page-is-the-only-rendered-page-content-for-that-route",
+      "title": "Verify and fix routing behavior so that navigating directly to `https://cutiepie-uhp.caffeine.xyz/#/wishes` (or locally `/#/wishes`) does not show the homepage content as a fallback, and the admin wishes page is the only rendered page content for that route.",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -241,6 +308,48 @@
       "reqIds": [
         "REQ-23"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Fix `backend/main.mo` so the backend canister compiles successfully while exposing a valid Candid interface that includes `submitWish(text : Text) : async ()` and `getAllWishes() : async [Text]`, with wishes returned in submission order.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Regenerate backend Candid/declaration bindings after the backend compile fix so the frontend actor typing remains consistent with the deployed canister interface.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Fix /wishes route so it renders an admin wishes page instead of the homepage by refactoring App.tsx to use react-router-dom Routes/Route: move landing page into src/pages/Home.tsx, admin into src/pages/AdminWishes.tsx, and ensure Home-only components (GiftBox/Fireworks/etc.) do not render on /wishes.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Ensure `react-router-dom` is installed and available in the frontend build so the app can use declarative routing with `<Routes>` and `<Route>`.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Switch client-side routing from BrowserRouter to HashRouter (update frontend/src/main.tsx or wherever the router is defined) so the admin page is accessible at `#/wishes` on IC hosting (e.g., https://cutiepie-uhp.caffeine.xyz/#/wishes).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-24",
+      "summary": "Create and publish a separate site (separate URL/deployment) that displays all user-submitted wishes for the owner to view (admin/read-only view of stored wishes).",
+      "reqIds": [],
       "status": "pending"
     }
   ],

@@ -1,64 +1,46 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-10T10:21:08.266Z",
+  "generatedAt": "2026-02-10T11:26:57.111Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 1,
+    "total": 2,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-20",
-        "summary": "Update the backend canister in `backend/main.mo` so it compiles and exposes a stable, upgrade-safe wishes store with the public methods `submitWish(text : Text) : async ()` and `getAllWishes() : async [Text]` returning all wishes in submission order.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-21",
-        "summary": "Replace the `/wishes` page UI in `frontend/src/pages/WishesPage.tsx` with a minimal admin view that calls `getAllWishes()` and displays wishes in a clean table or list, with a visible \"Refresh\" button that reloads the list on demand.",
+        "id": "REQ-33",
+        "summary": "Replace the current TanStack Router setup in `frontend/src/App.tsx` with `react-router-dom` hash routing by explicitly importing `HashRouter`, `Routes`, and `Route` from `react-router-dom`, wrapping the app in `<HashRouter>`, and defining exactly these routes: `<Route path=\"/\" element={<Home />} />` and `<Route path=\"/wishes\" element={<AdminWishes />} />`.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/WishesPage.tsx",
-          "frontend/src/hooks/useQueries.ts"
+          "frontend/src/App.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/WishesPage.tsx"
+          "frontend/src/App.tsx"
         ]
       },
       {
-        "id": "REQ-22",
-        "summary": "Ensure the `/wishes` admin page remains hidden from the main gift page UI (no navigation link or menu item added) and remains accessible only by directly visiting `/wishes` in the browser.",
-        "status": "missing",
+        "id": "REQ-34",
+        "summary": "Verify and fix routing behavior so that navigating directly to `https://cutiepie-uhp.caffeine.xyz/#/wishes` (or locally `/#/wishes`) does not show the homepage content as a fallback, and the admin wishes page is the only rendered page content for that route.",
+        "status": "implemented",
         "plannedFiles": [
           "frontend/src/App.tsx",
-          "frontend/src/components/GiftBox.tsx"
+          "frontend/src/App.hashrouting.test.tsx"
         ],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-23",
-        "summary": "Regenerate backend Candid/declarations after updating `backend/main.mo` so the frontend actor typing/bindings remain consistent with the updated canister interface.",
-        "status": "missing",
-        "plannedFiles": [
-          "frontend/src/backend.d.ts",
-          "frontend/src/hooks/useActor.ts"
-        ],
-        "matchedFiles": []
+        "matchedFiles": [
+          "frontend/src/App.tsx"
+        ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/pages/WishesPage.tsx",
+    "frontend/src/App.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

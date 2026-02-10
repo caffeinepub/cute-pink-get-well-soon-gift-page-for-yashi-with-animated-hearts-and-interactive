@@ -1,5 +1,5 @@
 {
-  "frontend/src/App.tsx": "Main application component with simple path-based routing that renders the gift experience at \"/\" and the wishes admin page at \"/wishes\" while preserving all existing animations and interactions.",
+  "frontend/src/App.tsx": "Main application component using TanStack Router with hash-based history, defining two isolated routes: \"/\" for Home page and \"/wishes\" for AdminWishes page without any shared layout or wrapper components.",
   "frontend/src/components/HeartsRain.tsx": "Canvas-based hearts rain animation component that creates gentle falling hearts across the screen with performance optimization and reduced-motion support, now with proper useRef initialization.",
   "frontend/src/components/CaringMessages.tsx": "Displays the caring message with three inline SVG icons (chocolate, teddy bear, hot water bottle) in a responsive card layout.",
   "frontend/src/components/GiftBox.tsx": "Interactive 3D-style pink gift box component with open/close animation, confetti burst effect, and integration with the wish panel.",
@@ -11,7 +11,10 @@
   "frontend/index.html": "HTML entry point with static title set to \"Cutiepie\" for pre-hydration display.",
   "frontend/tailwind.config.js": "Tailwind configuration extended with custom font families (Fredoka One for headings, Poppins for body) matching the cute aesthetic.",
   "frontend/src/appDomain.ts": "Exports the app domain constant \"Cutiepie\" and a validation function that enforces 5-50 character length and allows only letters, numbers, and hyphens.",
-  "frontend/src/main.tsx": "Application entry point that validates the app domain on startup, sets document.title dynamically, and wraps the app with QueryClient and InternetIdentity providers.",
+  "frontend/src/main.tsx": "Application entry point that validates the app domain on startup, sets document.title dynamically to \"Cutiepie\", configures QueryClient with sensible defaults, and wraps the app with QueryClient and InternetIdentity providers.",
   "frontend/src/hooks/useQueries.ts": "React Query hooks for backend operations: useSubmitWish mutation to save wishes and useGetAllWishes query to fetch all submitted wishes with proper cache invalidation.",
-  "frontend/src/pages/WishesPage.tsx": "Admin page component that fetches and displays all submitted wishes with a manual refresh button, loading/error/empty states, and clean list layout showing wish text and numbering."
+  "frontend/src/pages/WishesPage.tsx": "Admin page component that fetches and displays all submitted wishes with a manual refresh button, loading/error/empty states, and clean list layout showing wish text and numbering.",
+  "frontend/src/pages/Home.tsx": "Landing page component containing the complete gift experience with hero section, hearts rain animation, caring messages, interactive gift box, and footer.",
+  "frontend/src/pages/AdminWishes.tsx": "Admin page component that displays all submitted wishes with refresh functionality, loading states, and a scrollable list of wish cards.",
+  "frontend/DEPLOYMENT.md": "Comprehensive deployment and verification guide for the Cutiepie application, including step-by-step deployment instructions, post-deployment smoke tests for both home and admin wishes pages, troubleshooting tips, and success criteria checklist."
 }

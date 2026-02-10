@@ -1,106 +1,56 @@
 {
   "kind": "build_request",
-  "title": "Replace /wishes admin page with a simple refreshable wishes list (no password, no navigation link)",
+  "title": "Fix HashRouting in App.tsx using react-router-dom HashRouter so /#/wishes renders AdminWishes only",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-20",
-      "text": "Update the backend canister in `backend/main.mo` so it compiles and exposes a stable, upgrade-safe wishes store with the public methods `submitWish(text : Text) : async ()` and `getAllWishes() : async [Text]` returning all wishes in submission order.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "I need a hidden admin page to view the wishes people have submitted.\n\nPlease create a new page at the route /wishes that does the following:\n\nCalls the backend function getAllWishes().\n\nDisplays the list of messages in a simple table or list format.\n\nAdd a 'Refresh' button to reload the list.\n\n(Optional) Add a simple password protection so only I can see it.",
-          "Functionality: Ensure the page fetches data using the backend getAllWishes() function and displays the wishes in a clean list with timestamps (if available) or just the text."
-        ]
-      },
-      "acceptanceCriteria": [
-        "`backend/main.mo` builds successfully.",
-        "Candid interface includes `submitWish: (text: text) -> ()` and `getAllWishes: () -> (vec text) query`.",
-        "Wishes submitted via `submitWish` are persisted across canister upgrades (stable storage) and returned by `getAllWishes()` in the same order they were submitted."
-      ]
-    },
-    {
-      "id": "REQ-21",
-      "text": "Replace the `/wishes` page UI in `frontend/src/pages/WishesPage.tsx` with a minimal admin view that calls `getAllWishes()` and displays wishes in a clean table or list, with a visible \"Refresh\" button that reloads the list on demand.",
+      "id": "REQ-33",
+      "text": "Replace the current TanStack Router setup in `frontend/src/App.tsx` with `react-router-dom` hash routing by explicitly importing `HashRouter`, `Routes`, and `Route` from `react-router-dom`, wrapping the app in `<HashRouter>`, and defining exactly these routes: `<Route path=\"/\" element={<Home />} />` and `<Route path=\"/wishes\" element={<AdminWishes />} />`.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-13"
         ],
         "quotes": [
-          "Please create a new page at the route /wishes that does the following:\n\nCalls the backend function getAllWishes().\n\nDisplays the list of messages in a simple table or list format.\n\nAdd a 'Refresh' button to reload the list.",
-          "Functionality: Ensure the page fetches data using the backend getAllWishes() function and displays the wishes in a clean list with timestamps (if available) or just the text."
+          "Please fix App.tsx to handle HashRouting correctly:\n\nExplicitly Import: HashRouter, Routes, and Route from react-router-dom.\n\nStructure: Wrap the entire app in <HashRouter>.\n\nDefine Routes:\n\n<Route path=\"/\" element={<Home />} />\n\n<Route path=\"/wishes\" element={<AdminWishes />} />"
         ]
       },
       "acceptanceCriteria": [
-        "Visiting `/wishes` fetches wishes using the existing backend actor and `getAllWishes()` (no localStorage-based data source).",
-        "A \"Refresh\" button is present and triggers a refetch so new wishes appear without a full page reload.",
-        "The page renders a clean list/table of wish text; if timestamps are not available from the backend, only the text is shown.",
-        "The page includes basic loading, error, and empty states."
+        "`frontend/src/App.tsx` uses `HashRouter`, `Routes`, and `Route` from `react-router-dom` (no TanStack Router usage remains in App.tsx).",
+        "Visiting `/#/` renders the `Home` page UI (hero, hearts rain, gift box, footer).",
+        "Visiting `/#/wishes` renders the `AdminWishes` page UI and does NOT render any `Home`-only content (including the GiftBox and any fireworks triggered from it)."
       ]
     },
     {
-      "id": "REQ-22",
-      "text": "Ensure the `/wishes` admin page remains hidden from the main gift page UI (no navigation link or menu item added) and remains accessible only by directly visiting `/wishes` in the browser.",
+      "id": "REQ-34",
+      "text": "Verify and fix routing behavior so that navigating directly to `https://cutiepie-uhp.caffeine.xyz/#/wishes` (or locally `/#/wishes`) does not show the homepage content as a fallback, and the admin wishes page is the only rendered page content for that route.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-13"
         ],
         "quotes": [
-          "Navigation: No need"
+          "Verification: Ensure that when I am at /wishes, the Home component (GiftBox) is NOT rendered."
         ]
       },
       "acceptanceCriteria": [
-        "No new link/button is added on the main `/` gift experience that points to `/wishes`.",
-        "Direct navigation to `/wishes` continues to render the wishes admin page."
-      ]
-    },
-    {
-      "id": "REQ-23",
-      "text": "Regenerate backend Candid/declarations after updating `backend/main.mo` so the frontend actor typing/bindings remain consistent with the updated canister interface.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Calls the backend function getAllWishes()."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Frontend builds with up-to-date generated declarations reflecting the backend canister interface.",
-        "`useGetAllWishes()` and `useSubmitWish()` continue to typecheck and run against the regenerated declarations."
+        "On a hard refresh while the browser URL hash is `#/wishes`, the first rendered page is `AdminWishes` (no flash of `Home` content that remains on screen).",
+        "There is no route configuration that renders `Home` outside of the `path=\"/\"` route."
       ]
     }
   ],
   "constraints": [
-    "Do not add any password protection for `/wishes`.",
-    "Do not add any navigation elements on the main gift page to reach `/wishes`; the route should be reachable only by typing `/wishes` manually.",
-    "Respect the existing single-actor backend architecture (all Motoko logic remains in `backend/main.mo`; only use `backend/migration.mo` if an actual state migration is required).",
-    "Do not edit frontend files under the immutable paths listed in SYSTEM_CONTEXT (compose existing UI components instead).",
-    "Use English for any user-facing text added/changed as part of this build request."
+    "Do not edit any files under `frontend/src/components/ui` (read-only UI component sources must be composed, not edited).",
+    "Do not edit immutable paths listed in SYSTEM_CONTEXT (e.g., `frontend/src/hooks/useInternetIdentity.ts(x)`, `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`).",
+    "Keep the `/wishes` admin page hidden (no new navigation link/menu added on the home page)."
   ],
   "nonGoals": [
-    "Do not reveal or attempt to retrieve backend canister IDs or deployment metadata in the UI.",
-    "Do not implement authentication/Internet Identity gating for the `/wishes` page.",
-    "Do not add real-time updates (polling/websockets); refresh is manual via the button."
+    "No backend (Motoko) changes.",
+    "No changes to the visual design/theme of the Home or AdminWishes pages beyond what is necessary to fix routing.",
+    "No additional routes or authentication/authorization for the admin page."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }
