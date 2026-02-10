@@ -1,42 +1,44 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-10T09:20:26.618Z",
-  "summary": "Domain constant \"Cutiepie\" and a domain validation helper were added, and the HTML title was updated to \"Cutiepie\". However, the diff does not provide evidence of an actual publish/deployment run completing successfully (only code/config changes are shown).",
+  "generatedAt": "2026-02-10T10:21:08.263Z",
+  "summary": "Frontend `/wishes` page was replaced with a refreshable list UI using `useGetAllWishes()` and a manual Refresh button with loading/error/empty states. Backend was modified to add `submitWish`/`getAllWishes` and a new `backend/migration.mo` was introduced, but the diff summary does not provide clear evidence that the wishes store is stable/upgrade-safe or that declarations/candid were regenerated.",
   "missing_requirements": [
     {
-      "id": "REQ-10",
-      "requirement": "Rerun the publish/deployment so the site is published successfully under the \"Cutiepie\" domain; publish/deployment completes successfully without domain validation errors.",
-      "reason": "The diff shows code/config changes for the domain and validation, but contains no evidence of running or updating deployment/publish artifacts (e.g., CI logs, deployment config changes, or publish output) demonstrating a successful publish without domain validation errors.",
+      "id": "REQ-20",
+      "requirement": "Persist wishes across canister upgrades using stable, upgrade-safe storage, and return them in submission order.",
+      "reason": "The backend implementation shows `let wishes = List.empty<Text>();` inside the actor, but the diff summary does not show any `stable` variable usage or explicit preupgrade/postupgrade handling to guarantee persistence across upgrades. The added `backend/migration.mo` suggests a migration approach, but the provided `backend/main.mo` snippet does not show stable state definitions being migrated from/to stable memory.",
       "evidence": [
-        "frontend/src/appDomain.ts",
-        "frontend/index.html",
-        "frontend-file-summaries.txt"
+        "backend/main.mo",
+        "backend/migration.mo"
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "requirement": "Regenerate backend Candid/declarations so frontend actor typing/bindings remain consistent with the updated canister interface.",
+      "reason": "The diff summary does not show changes to any generated declaration files (e.g., `declarations/...`), candid files, or other artifacts that would indicate regeneration of bindings after updating `backend/main.mo`.",
+      "evidence": [
+        "backend/main.mo",
+        "frontend/src/hooks/useQueries.ts (referenced via frontend-file-summaries.txt, but no diff shown for regenerated bindings)"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Added runtime domain validation helper function (validateDomain) and a startup-time validation behavior (as described)",
-      "reason": "REQ-10 asks to update the configured domain to \"Cutiepie\" and publish successfully; it does not explicitly request adding a new validation module or runtime validation flow.",
+      "description": "Added a backend state migration module even though a migration is only to be used if an actual state migration is required.",
+      "reason": "A new `backend/migration.mo` was added and `backend/main.mo` was modified to reference it (`import Migration \"migration\"; (with migration = Migration.run)`), but the diff summary does not establish that an actual state migration was necessary for this change.",
       "evidence": [
-        "frontend/src/appDomain.ts",
-        "frontend-file-summaries.txt"
-      ]
-    },
-    {
-      "description": "Integration/wrapping app with QueryClient and InternetIdentity providers (as described in file summary)",
-      "reason": "Not requested by REQ-10 and potentially beyond \"No changes to backend canister APIs beyond what is required\"; also unrelated to just setting the domain to \"Cutiepie\".",
-      "evidence": [
-        "frontend-file-summaries.txt"
+        "backend/migration.mo",
+        "backend/main.mo"
       ]
     }
   ],
-  "confidence": 0.62,
+  "confidence": 0.64,
   "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/index.html",
-    "frontend/src/appDomain.ts",
+    "frontend/src/pages/WishesPage.tsx",
     "project_state.json"
   ]
 }

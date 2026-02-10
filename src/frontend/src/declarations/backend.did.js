@@ -9,13 +9,17 @@
 import { IDL } from '@icp-sdk/core/candid';
 
 export const idlService = IDL.Service({
-  'getHealth' : IDL.Func([], [IDL.Text], ['query']),
+  'getAllWishes' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
+  'submitWish' : IDL.Func([IDL.Text], [], []),
 });
 
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
-  return IDL.Service({ 'getHealth' : IDL.Func([], [IDL.Text], ['query']) });
+  return IDL.Service({
+    'getAllWishes' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
+    'submitWish' : IDL.Func([IDL.Text], [], []),
+  });
 };
 
 export const init = ({ IDL }) => { return []; };

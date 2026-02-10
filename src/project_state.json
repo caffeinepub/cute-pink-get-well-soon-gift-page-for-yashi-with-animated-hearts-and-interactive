@@ -1,19 +1,25 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
-  "summary": "Pink-themed \"Get Well Soon\" gift webpage for Yashi; deployment/publish flow now includes an Internet Computer-style backend canister where backend/main.mo must define a minimal actor interface (health-check) so the frontend build pipeline (useActor.ts) can generate/use the Candid interface successfully.",
+  "projectStateVersion": 13,
+  "summary": "Pink-themed \"Get Well Soon\" gift webpage for Yashi; backend-persisted wish submissions (stable storage) with submitWish/getAllWishes Candid API; frontend WishPanel submits to backend (not localStorage); replace the planned admin /wishes route with a hidden (no navigation link) simple list/table view that calls getAllWishes(), includes a Refresh button, and shows timestamps if available (otherwise just wish text). Deployment/publish flow still requires backend/main.mo to define a valid actor interface for Candid generation (useActor.ts).",
   "architectural_notes": [
     "Deliver as a single self-contained index.html with embedded CSS and JavaScript.",
     "Only external dependency allowed: Google Fonts (optionally lightweight CDN animation assets if needed).",
     "Persist the entered wish using localStorage so it survives refresh.",
     "Design must be fully responsive and touch-friendly for mobile/desktop.",
-    "If using a backend canister, backend/main.mo must not be empty; it must define an actor interface (e.g., a simple getHealth() query) so the Candid interface can be generated/consumed by the frontend build pipeline (useActor.ts)."
+    "If using a backend canister, backend/main.mo must not be empty; it must define an actor interface (e.g., a simple getHealth() query) so the Candid interface can be generated/consumed by the frontend build pipeline (useActor.ts).",
+    "Move wish persistence from client-only localStorage to backend canister stable storage so submissions are retrievable by the site owner.",
+    "Expose backend canister methods submitWish(Text) and getAllWishes() via the actor/Candid interface consumed by the frontend (useActor.ts).",
+    "Add an admin route (/wishes) that reads wishes from the backend and displays them.",
+    "Backend wish persistence implementation should use `stable var storage : [Text]` plus an in-memory `Buffer<Text>` loaded from `storage`, with `preupgrade`/`postupgrade` hooks to sync Buffer <-> stable storage; backend/main.mo should expose `submitWish(Text)` and `getAllWishes()` accordingly, then regenerate declarations before publishing.",
+    "/wishes admin page should be hidden from navigation (accessible by direct URL only), fetch via getAllWishes(), and include a manual Refresh button; display timestamps if available or fall back to wish text only."
   ],
   "known_issues": [
     "Publish/deployment failing with configuration error because backend/main.mo is empty while the frontend build pipeline (useActor.ts) expects a valid actor/Candid interface.",
-    "Publish blocked by domain validation: domain must be 5–50 characters and contain only letters, numbers, and hyphens (previous domain \"Cutie_Pie\" invalid due to underscore)."
+    "Publish blocked by domain validation: domain must be 5–50 characters and contain only letters, numbers, and hyphens (previous domain \"Cutie_Pie\" invalid due to underscore).",
+    "Current WishPanel saves wishes only to visitor localStorage, so the site owner cannot read submitted wishes from other users/browsers."
   ],
-  "isFixRequest": true,
+  "isFixRequest": false,
   "existing_features": [
     {
       "id": "feature-create-a-single-page-mobile-first-react-ui-that-visually-matches-a-cute-pastel-pink-get-well-soon-gift-site-dedicated-to-yashi-including-a-cozy-background-clouds-blanket-like-gradient-hearts-flowers-motif-gentle-sparkles-and-consistently-applied-playful-typography-using-google-fonts-e-g-fredoka-one-poppins",
@@ -86,6 +92,46 @@
         "REQ-10"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-update-frontend-src-components-wishpanel-tsx-to-submit-wishes-to-the-backend-by-calling-submitwish-text-via-the-existing-frontend-actor-hookup-instead-of-saving-wishes-only-to-localstorage-preserve-the-current-ux-behaviors-disabling-after-send-triggering-onwishsent-and-keeping-the-existing-response-message-text",
+      "title": "Update `frontend/src/components/WishPanel.tsx` to submit wishes to the backend by calling `submitWish(text)` (via the existing frontend actor hookup) instead of saving wishes only to `localStorage`. Preserve the current UX behaviors (disabling after send, triggering `onWishSent()`, and keeping the existing response message text).",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-simple-admin-view-at-route-wishes-that-fetches-all-submitted-wishes-using-getallwishes-and-renders-them-as-a-readable-list",
+      "title": "Create a simple admin view at route `/wishes` that fetches all submitted wishes using `getAllWishes()` and renders them as a readable list.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-client-side-routing-so-the-main-gift-page-remains-accessible-at-and-the-new-admin-wishes-list-is-accessible-at-wishes-without-breaking-existing-layout-animations-styles",
+      "title": "Add client-side routing so the main gift page remains accessible at `/` and the new admin wishes list is accessible at `/wishes` without breaking existing layout/animations/styles.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-regenerate-backend-candid-declarations-after-updating-backend-main-mo-so-the-frontend-actor-typing-and-bindings-reflect-the-updated-canister-interface",
+      "title": "Regenerate backend Candid/declarations after updating `backend/main.mo` so the frontend actor typing and bindings reflect the updated canister interface.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-wishes-page-ui-in-frontend-src-pages-wishespage-tsx-with-a-minimal-admin-view-that-calls-getallwishes-and-displays-wishes-in-a-clean-table-or-list-with-a-visible-refresh-button-that-reloads-the-list-on-demand",
+      "title": "Replace the `/wishes` page UI in `frontend/src/pages/WishesPage.tsx` with a minimal admin view that calls `getAllWishes()` and displays wishes in a clean table or list, with a visible \"Refresh\" button that reloads the list on demand.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -113,6 +159,88 @@
       "id": "AR-4",
       "summary": "Update the project/app domain name to \"Cutiepie\" (to satisfy domain validation rules) and rerun the publish/deployment.",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Implement backend wish persistence in backend/main.mo using stable storage and expose public submitWish(text: Text) and public query getAllWishes() so wishes can be retrieved server-side.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Update frontend WishPanel.tsx to call backend submitWish instead of saving wishes only to localStorage (optionally keep local UI state).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Update `backend/main.mo` to persist submitted wishes in stable storage so wishes survive canister upgrades, while keeping the existing `getHealth()` query method.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Add a public update method `submitWish(text: Text)` on the backend canister that appends the provided wish text to the persisted stable wish list.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Add a public query method `getAllWishes()` on the backend canister that returns all stored wishes in submission order.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Replace the entire contents of `backend/main.mo` with the exact Motoko code provided by the user that uses `Buffer` for mutable in-memory storage and a `stable var storage : [Text]` for upgrade-safe persistence, exposing `submitWish(text: Text) : async ()`, `getAllWishes() : async [Text]`, and implementing `system func preupgrade()` / `system func postupgrade()` to sync `wishesBuffer` with `storage`.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Publish/deploy the project again after the backend code replacement and declaration regeneration, ensuring the deployment completes successfully.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Replace the /wishes admin page with a hidden (no navigation) simple view at route /wishes that fetches wishes via backend getAllWishes(), displays them in a clean list/table, and includes a Refresh button; no password protection; show timestamps if available otherwise show wish text only.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Update the backend canister in `backend/main.mo` so it compiles and exposes a stable, upgrade-safe wishes store with the public methods `submitWish(text : Text) : async ()` and `getAllWishes() : async [Text]` returning all wishes in submission order.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Ensure the `/wishes` admin page remains hidden from the main gift page UI (no navigation link or menu item added) and remains accessible only by directly visiting `/wishes` in the browser.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Regenerate backend Candid/declarations after updating `backend/main.mo` so the frontend actor typing/bindings remain consistent with the updated canister interface.",
+      "reqIds": [
+        "REQ-23"
+      ],
       "status": "pending"
     }
   ],

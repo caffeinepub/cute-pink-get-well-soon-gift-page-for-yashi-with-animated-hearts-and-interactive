@@ -1,34 +1,93 @@
 {
   "kind": "build_request",
-  "title": "Update app domain to Cutiepie and republish",
+  "title": "Replace /wishes admin page with a simple refreshable wishes list (no password, no navigation link)",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-10",
-      "text": "Update the project/app domain name to \"Cutiepie\" (letters only; 5–50 characters; no underscores) and rerun the publish/deployment so the site is published successfully under that domain.",
-      "target": "unknown",
+      "id": "REQ-20",
+      "text": "Update the backend canister in `backend/main.mo` so it compiles and exposes a stable, upgrade-safe wishes store with the public methods `submitWish(text : Text) : async ()` and `getAllWishes() : async [Text]` returning all wishes in submission order.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-1"
         ],
         "quotes": [
-          "change domain with Cutiepie and publish it."
+          "I need a hidden admin page to view the wishes people have submitted.\n\nPlease create a new page at the route /wishes that does the following:\n\nCalls the backend function getAllWishes().\n\nDisplays the list of messages in a simple table or list format.\n\nAdd a 'Refresh' button to reload the list.\n\n(Optional) Add a simple password protection so only I can see it.",
+          "Functionality: Ensure the page fetches data using the backend getAllWishes() function and displays the wishes in a clean list with timestamps (if available) or just the text."
         ]
       },
       "acceptanceCriteria": [
-        "The configured app domain is exactly \"Cutiepie\".",
-        "Domain validation passes (contains only letters, numbers, and hyphens; length 5–50).",
-        "A publish/deployment run completes successfully without domain validation errors."
+        "`backend/main.mo` builds successfully.",
+        "Candid interface includes `submitWish: (text: text) -> ()` and `getAllWishes: () -> (vec text) query`.",
+        "Wishes submitted via `submitWish` are persisted across canister upgrades (stable storage) and returned by `getAllWishes()` in the same order they were submitted."
+      ]
+    },
+    {
+      "id": "REQ-21",
+      "text": "Replace the `/wishes` page UI in `frontend/src/pages/WishesPage.tsx` with a minimal admin view that calls `getAllWishes()` and displays wishes in a clean table or list, with a visible \"Refresh\" button that reloads the list on demand.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Please create a new page at the route /wishes that does the following:\n\nCalls the backend function getAllWishes().\n\nDisplays the list of messages in a simple table or list format.\n\nAdd a 'Refresh' button to reload the list.",
+          "Functionality: Ensure the page fetches data using the backend getAllWishes() function and displays the wishes in a clean list with timestamps (if available) or just the text."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Visiting `/wishes` fetches wishes using the existing backend actor and `getAllWishes()` (no localStorage-based data source).",
+        "A \"Refresh\" button is present and triggers a refetch so new wishes appear without a full page reload.",
+        "The page renders a clean list/table of wish text; if timestamps are not available from the backend, only the text is shown.",
+        "The page includes basic loading, error, and empty states."
+      ]
+    },
+    {
+      "id": "REQ-22",
+      "text": "Ensure the `/wishes` admin page remains hidden from the main gift page UI (no navigation link or menu item added) and remains accessible only by directly visiting `/wishes` in the browser.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Navigation: No need"
+        ]
+      },
+      "acceptanceCriteria": [
+        "No new link/button is added on the main `/` gift experience that points to `/wishes`.",
+        "Direct navigation to `/wishes` continues to render the wishes admin page."
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "text": "Regenerate backend Candid/declarations after updating `backend/main.mo` so the frontend actor typing/bindings remain consistent with the updated canister interface.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Calls the backend function getAllWishes()."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Frontend builds with up-to-date generated declarations reflecting the backend canister interface.",
+        "`useGetAllWishes()` and `useSubmitWish()` continue to typecheck and run against the regenerated declarations."
       ]
     }
   ],
   "constraints": [
-    "Do not use underscores in the domain; domain must be 5–50 characters and contain only letters, numbers, and hyphens.",
-    "Do not modify any immutable frontend paths listed in SYSTEM_CONTEXT."
+    "Do not add any password protection for `/wishes`.",
+    "Do not add any navigation elements on the main gift page to reach `/wishes`; the route should be reachable only by typing `/wishes` manually.",
+    "Respect the existing single-actor backend architecture (all Motoko logic remains in `backend/main.mo`; only use `backend/migration.mo` if an actual state migration is required).",
+    "Do not edit frontend files under the immutable paths listed in SYSTEM_CONTEXT (compose existing UI components instead).",
+    "Use English for any user-facing text added/changed as part of this build request."
   ],
   "nonGoals": [
-    "No UI/UX changes to the gift page content or styling.",
-    "No changes to backend canister APIs beyond what is required for publish to succeed."
+    "Do not reveal or attempt to retrieve backend canister IDs or deployment metadata in the UI.",
+    "Do not implement authentication/Internet Identity gating for the `/wishes` page.",
+    "Do not add real-time updates (polling/websockets); refresh is manual via the button."
   ],
   "imageRequirements": {
     "required": [],

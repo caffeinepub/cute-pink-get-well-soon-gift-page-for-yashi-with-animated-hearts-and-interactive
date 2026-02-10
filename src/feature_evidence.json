@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-project-app-domain-name-to-cutiepie-letters-only-5-50-characters-no-underscores-and-rerun-the-publish-deployment-so-the-site-is-published-successfully-under-that-domain",
-      "featureTitle": "Update the project/app domain name to \"Cutiepie\" (letters only; 5–50 characters; no underscores) and rerun the publish/deployment so the site is published successfully under that domain.",
+      "featureId": "feature-replace-the-wishes-page-ui-in-frontend-src-pages-wishespage-tsx-with-a-minimal-admin-view-that-calls-getallwishes-and-displays-wishes-in-a-clean-table-or-list-with-a-visible-refresh-button-that-reloads-the-list-on-demand",
+      "featureTitle": "Replace the `/wishes` page UI in `frontend/src/pages/WishesPage.tsx` with a minimal admin view that calls `getAllWishes()` and displays wishes in a clean table or list, with a visible \"Refresh\" button that reloads the list on demand.",
       "files": [
-        "frontend/index.html",
-        "frontend/src/appDomain.ts"
+        "frontend/src/pages/WishesPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -16,7 +15,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-10"
+        "REQ-21"
       ],
       "confidence": "high"
     }

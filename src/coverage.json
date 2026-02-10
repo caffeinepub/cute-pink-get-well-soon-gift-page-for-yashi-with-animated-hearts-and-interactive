@@ -1,38 +1,64 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-10T09:20:26.621Z",
+  "generatedAt": "2026-02-10T10:21:08.266Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 1,
+    "total": 4,
     "implemented": 1,
     "items": [
       {
-        "id": "REQ-10",
-        "summary": "Update the project/app domain name to \"Cutiepie\" (letters only; 5–50 characters; no underscores) and rerun the publish/deployment so the site is published successfully under that domain.",
+        "id": "REQ-20",
+        "summary": "Update the backend canister in `backend/main.mo` so it compiles and exposes a stable, upgrade-safe wishes store with the public methods `submitWish(text : Text) : async ()` and `getAllWishes() : async [Text]` returning all wishes in submission order.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-21",
+        "summary": "Replace the `/wishes` page UI in `frontend/src/pages/WishesPage.tsx` with a minimal admin view that calls `getAllWishes()` and displays wishes in a clean table or list, with a visible \"Refresh\" button that reloads the list on demand.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/appDomain.ts",
-          "frontend/src/main.tsx",
-          "frontend/index.html"
+          "frontend/src/pages/WishesPage.tsx",
+          "frontend/src/hooks/useQueries.ts"
         ],
         "matchedFiles": [
-          "frontend/src/appDomain.ts",
-          "frontend/index.html"
+          "frontend/src/pages/WishesPage.tsx"
         ]
+      },
+      {
+        "id": "REQ-22",
+        "summary": "Ensure the `/wishes` admin page remains hidden from the main gift page UI (no navigation link or menu item added) and remains accessible only by directly visiting `/wishes` in the browser.",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/components/GiftBox.tsx"
+        ],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-23",
+        "summary": "Regenerate backend Candid/declarations after updating `backend/main.mo` so the frontend actor typing/bindings remain consistent with the updated canister interface.",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/backend.d.ts",
+          "frontend/src/hooks/useActor.ts"
+        ],
+        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/index.html",
-    "frontend/src/appDomain.ts",
+    "frontend/src/pages/WishesPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

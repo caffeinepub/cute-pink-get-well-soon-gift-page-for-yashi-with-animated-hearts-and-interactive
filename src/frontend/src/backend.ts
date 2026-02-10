@@ -90,21 +90,36 @@ export class ExternalBlob {
     }
 }
 export interface backendInterface {
-    getHealth(): Promise<string>;
+    getAllWishes(): Promise<Array<string>>;
+    submitWish(text: string): Promise<void>;
 }
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
-    async getHealth(): Promise<string> {
+    async getAllWishes(): Promise<Array<string>> {
         if (this.processError) {
             try {
-                const result = await this.actor.getHealth();
+                const result = await this.actor.getAllWishes();
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.getHealth();
+            const result = await this.actor.getAllWishes();
+            return result;
+        }
+    }
+    async submitWish(arg0: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.submitWish(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.submitWish(arg0);
             return result;
         }
     }

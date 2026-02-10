@@ -1,5 +1,15 @@
+import List "mo:core/List";
+import Migration "migration";
+
+(with migration = Migration.run)
 actor {
-  public query ({ caller }) func getHealth() : async Text {
-    "System Operational";
+  let wishes = List.empty<Text>();
+
+  public shared ({ caller }) func submitWish(text : Text) : async () {
+    wishes.add(text);
+  };
+
+  public query ({ caller }) func getAllWishes() : async [Text] {
+    wishes.toArray();
   };
 };

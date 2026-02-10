@@ -1,29 +1,30 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import useLocalStorage from '../hooks/useLocalStorage';
+import { useSubmitWish } from '../hooks/useQueries';
 
 interface WishPanelProps {
   onWishSent: () => void;
 }
 
 export default function WishPanel({ onWishSent }: WishPanelProps) {
-  const [wish, setWish] = useLocalStorage('yashi-wish', '');
   const [wishSent, setWishSent] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  
+  const submitWishMutation = useSubmitWish();
 
-  useEffect(() => {
-    if (wish) {
-      setInputValue(wish);
-      setWishSent(true);
-    }
-  }, [wish]);
-
-  const handleSendWish = () => {
+  const handleSendWish = async () => {
     if (inputValue.trim()) {
-      setWish(inputValue);
-      setWishSent(true);
-      onWishSent();
+      setErrorMessage('');
+      try {
+        await submitWishMutation.mutateAsync(inputValue);
+        setWishSent(true);
+        onWishSent();
+      } catch (error) {
+        console.error('Failed to submit wish:', error);
+        setErrorMessage('Failed to send wish. Please try again.');
+      }
     }
   };
 
@@ -42,17 +43,25 @@ export default function WishPanel({ onWishSent }: WishPanelProps) {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           className="wish-input text-lg md:text-xl h-14 md:h-16"
-          disabled={wishSent}
+          disabled={wishSent || submitWishMutation.isPending}
         />
 
         <Button
           onClick={handleSendWish}
-          disabled={!inputValue.trim() || wishSent}
+          disabled={!inputValue.trim() || wishSent || submitWishMutation.isPending}
           className="send-wish-button w-full h-14 md:h-16 text-lg md:text-xl font-bold"
           size="lg"
         >
-          {wishSent ? 'Wish Sent! ✨' : 'Send Wish'}
+          {submitWishMutation.isPending ? 'Sending...' : wishSent ? 'Wish Sent! ✨' : 'Send Wish'}
         </Button>
+
+        {errorMessage && (
+          <div className="error-message text-center mt-4 animate-fade-in">
+            <p className="text-lg text-red-600 dark:text-red-400">
+              {errorMessage}
+            </p>
+          </div>
+        )}
 
         {wishSent && (
           <div className="response-message text-center mt-6 animate-fade-in">

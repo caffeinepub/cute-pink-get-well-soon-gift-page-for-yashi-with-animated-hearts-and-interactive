@@ -8,5 +8,6 @@ export interface None {
 }
 export type Option<T> = Some<T> | None;
 export interface backendInterface {
-    getHealth(): Promise<string>;
+    getAllWishes(): Promise<Array<string>>;
+    submitWish(text: string): Promise<void>;
 }

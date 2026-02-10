@@ -1,9 +1,28 @@
+import { useEffect, useState } from 'react';
 import HeartsRain from './components/HeartsRain';
 import CaringMessages from './components/CaringMessages';
 import GiftBox from './components/GiftBox';
 import Footer from './components/Footer';
+import WishesPage from './pages/WishesPage';
 
 export default function App() {
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setCurrentPath(window.location.pathname);
+    };
+
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
+
+  // Route to wishes admin page
+  if (currentPath === '/wishes') {
+    return <WishesPage />;
+  }
+
+  // Default route - main gift experience
   return (
     <div className="min-h-screen relative overflow-x-hidden">
       {/* Hearts rain animation overlay */}

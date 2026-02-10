@@ -1,31 +1,67 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Set app domain to Cutiepie (frontend config)",
+  "title": "Minimal hidden /wishes admin list with manual refresh and up-to-date declarations",
   "requirements": [
     {
-      "id": "REQ-10",
-      "summary": "Configure the app/domain name as \"Cutiepie\" in frontend-visible configuration and ensure it passes the domain validation rules used by the app during startup.",
+      "id": "REQ-21",
+      "summary": "Replace the /wishes page UI with a minimal admin list that fetches via getAllWishes() and supports manual refresh.",
       "acceptanceCriteria": [
-        "The configured app domain is exactly \"Cutiepie\".",
-        "Domain validation passes (contains only letters, numbers, and hyphens; length 5–50).",
-        "A publish/deployment run completes successfully without domain validation errors."
+        "Visiting `/wishes` fetches wishes using the existing backend actor and `getAllWishes()` (no localStorage-based data source).",
+        "A \"Refresh\" button is present and triggers a refetch so new wishes appear without a full page reload.",
+        "The page renders a clean list/table of wish text; if timestamps are not available from the backend, only the text is shown.",
+        "The page includes basic loading, error, and empty states."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/appDomain.ts",
-          "operation": "create",
-          "description": "Create a single source of truth for the app/domain string set to \"Cutiepie\" along with a small validator enforcing: 5–50 chars, only letters/numbers/hyphens, and no underscores."
+          "path": "frontend/src/pages/WishesPage.tsx",
+          "operation": "modify",
+          "description": "Replace the current wishes page layout with a minimal admin view: render a simple list/table of wish text, add a visible \"Refresh\" button that triggers a React Query refetch, and keep basic loading/error/empty states. Use shadcn-ui components (e.g., Button/Card) where appropriate for consistent styling; verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/main.tsx",
+          "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Import the app/domain constant and validation helper; validate on startup (fail fast with a clear console error if invalid) and set document.title to \"Cutiepie\" so the published app reflects the configured domain name."
+          "description": "Ensure `useGetAllWishes()` cleanly exposes refetching behavior (via React Query's returned `refetch`) and continues to fetch through the backend actor's `getAllWishes()` (no local cache/localStorage data source)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-22",
+      "summary": "Keep the /wishes admin page hidden from the main gift UI (no navigation link), while remaining reachable by direct URL.",
+      "acceptanceCriteria": [
+        "No new link/button is added on the main `/` gift experience that points to `/wishes`.",
+        "Direct navigation to `/wishes` continues to render the wishes admin page."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Confirm routing continues to render `WishesPage` only when `window.location.pathname === '/wishes'` and ensure the main gift experience does not add any link/button/menu item pointing to `/wishes`."
         },
         {
-          "path": "frontend/index.html",
+          "path": "frontend/src/components/GiftBox.tsx",
           "operation": "modify",
-          "description": "Update the static <title> to \"Cutiepie\" to match the configured app/domain name for environments where JS is disabled or before hydration."
+          "description": "Verify the main gift experience UI does not contain any navigation element that points to `/wishes`; remove/avoid adding any such link if present."
+        }
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "summary": "Update frontend declarations/bindings to stay consistent with the regenerated backend canister interface.",
+      "acceptanceCriteria": [
+        "Frontend builds with up-to-date generated declarations reflecting the backend canister interface.",
+        "`useGetAllWishes()` and `useSubmitWish()` continue to typecheck and run against the regenerated declarations."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/backend.d.ts",
+          "operation": "modify",
+          "description": "Update the frontend actor type declarations to match the regenerated canister interface so `submitWish(text: string): Promise<void>` and `getAllWishes(): Promise<Array<string>>` are correctly represented and `useActor`/React Query hooks continue to typecheck."
+        },
+        {
+          "path": "frontend/src/hooks/useActor.ts",
+          "operation": "modify",
+          "description": "Adjust imports/types as needed to align with the updated generated declarations so the actor type remains consistent and the app compiles."
         }
       ]
     }
