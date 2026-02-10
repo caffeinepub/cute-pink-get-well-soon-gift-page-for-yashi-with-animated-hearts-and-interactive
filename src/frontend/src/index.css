@@ -1,0 +1,533 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 1.5rem;
+        /* Pastel pink palette */
+        --background: 0.98 0.05 340;
+        --foreground: 0.3 0.08 340;
+        --card: 0.99 0.04 340;
+        --card-foreground: 0.3 0.08 340;
+        --popover: 0.99 0.04 340;
+        --popover-foreground: 0.3 0.08 340;
+        --primary: 0.65 0.18 340;
+        --primary-foreground: 1 0 0;
+        --secondary: 0.95 0.06 340;
+        --secondary-foreground: 0.3 0.08 340;
+        --muted: 0.96 0.05 340;
+        --muted-foreground: 0.55 0.08 340;
+        --accent: 0.88 0.12 340;
+        --accent-foreground: 0.3 0.08 340;
+        --destructive: 0.577 0.245 27.325;
+        --destructive-foreground: 0.985 0 0;
+        --border: 0.92 0.06 340;
+        --input: 0.92 0.06 340;
+        --ring: 0.65 0.18 340;
+    }
+
+    .dark {
+        --background: 0.25 0.08 340;
+        --foreground: 0.98 0.05 340;
+        --card: 0.3 0.08 340;
+        --card-foreground: 0.98 0.05 340;
+        --popover: 0.3 0.08 340;
+        --popover-foreground: 0.98 0.05 340;
+        --primary: 0.75 0.18 340;
+        --primary-foreground: 0.2 0.08 340;
+        --secondary: 0.35 0.08 340;
+        --secondary-foreground: 0.98 0.05 340;
+        --muted: 0.35 0.08 340;
+        --muted-foreground: 0.7 0.1 340;
+        --accent: 0.5 0.15 340;
+        --accent-foreground: 0.98 0.05 340;
+        --destructive: 0.704 0.191 22.216;
+        --destructive-foreground: 0.98 0.05 340;
+        --border: 0.4 0.1 340;
+        --input: 0.4 0.1 340;
+        --ring: 0.75 0.18 340;
+    }
+
+    * {
+        @apply border-border;
+    }
+    
+    body {
+        @apply bg-background text-foreground;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, 
+            oklch(0.98 0.05 340) 0%, 
+            oklch(0.96 0.06 350) 50%, 
+            oklch(0.97 0.05 330) 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+
+    .dark body {
+        background: linear-gradient(135deg, 
+            oklch(0.25 0.08 340) 0%, 
+            oklch(0.22 0.09 350) 50%, 
+            oklch(0.24 0.08 330) 100%);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Fredoka One', cursive;
+    }
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+}
+
+.hero-title {
+    color: oklch(0.65 0.18 340);
+    text-shadow: 2px 2px 4px oklch(1 0 0 / 0.3);
+    line-height: 1.2;
+}
+
+.dark .hero-title {
+    color: oklch(0.85 0.15 340);
+    text-shadow: 2px 2px 8px oklch(0 0 0 / 0.5);
+}
+
+/* Caring Messages */
+.message-card {
+    background: linear-gradient(135deg, 
+        oklch(0.99 0.04 340 / 0.8) 0%, 
+        oklch(0.97 0.06 350 / 0.8) 100%);
+    border: 2px solid oklch(0.92 0.08 340);
+    box-shadow: 0 8px 32px oklch(0.65 0.18 340 / 0.15);
+}
+
+.dark .message-card {
+    background: linear-gradient(135deg, 
+        oklch(0.3 0.08 340 / 0.8) 0%, 
+        oklch(0.28 0.09 350 / 0.8) 100%);
+    border: 2px solid oklch(0.4 0.1 340);
+}
+
+.message-text {
+    color: oklch(0.4 0.1 340);
+    font-weight: 600;
+}
+
+.dark .message-text {
+    color: oklch(0.9 0.08 340);
+}
+
+.icon {
+    filter: drop-shadow(0 4px 8px oklch(0.65 0.18 340 / 0.2));
+    transition: transform 0.3s ease;
+}
+
+.icon:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Gift Box 3D Styles */
+.perspective-1000 {
+    perspective: 1000px;
+}
+
+.gift-box {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin: 0 auto;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.gift-box:hover {
+    transform: scale(1.05);
+}
+
+.gift-box:focus {
+    outline: 3px solid oklch(0.65 0.18 340);
+    outline-offset: 8px;
+    border-radius: 12px;
+}
+
+.box-base {
+    position: absolute;
+    width: 100%;
+    height: 70%;
+    bottom: 0;
+    transform-style: preserve-3d;
+}
+
+.box-front, .box-back, .box-left, .box-right, .box-bottom {
+    position: absolute;
+    background: oklch(0.75 0.18 340);
+    border: 3px solid oklch(0.65 0.18 340);
+}
+
+.box-front {
+    width: 100%;
+    height: 100%;
+    transform: translateZ(140px);
+}
+
+.box-back {
+    width: 100%;
+    height: 100%;
+    transform: translateZ(-140px) rotateY(180deg);
+}
+
+.box-left {
+    width: 280px;
+    height: 100%;
+    left: -140px;
+    transform: rotateY(-90deg);
+}
+
+.box-right {
+    width: 280px;
+    height: 100%;
+    right: -140px;
+    transform: rotateY(90deg);
+}
+
+.box-bottom {
+    width: 100%;
+    height: 280px;
+    bottom: -140px;
+    transform: rotateX(-90deg);
+}
+
+.box-lid {
+    position: absolute;
+    width: 100%;
+    height: 30%;
+    top: 0;
+    transform-style: preserve-3d;
+    transform-origin: top center;
+    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.gift-box.open .box-lid {
+    transform: rotateX(-120deg) translateZ(20px);
+}
+
+.lid-top, .lid-front, .lid-back, .lid-left, .lid-right {
+    position: absolute;
+    background: oklch(0.8 0.18 340);
+    border: 3px solid oklch(0.7 0.18 340);
+}
+
+.lid-top {
+    width: 100%;
+    height: 280px;
+    top: -140px;
+    transform: rotateX(90deg);
+}
+
+.lid-front {
+    width: 100%;
+    height: 100%;
+    transform: translateZ(140px);
+}
+
+.lid-back {
+    width: 100%;
+    height: 100%;
+    transform: translateZ(-140px) rotateY(180deg);
+}
+
+.lid-left {
+    width: 280px;
+    height: 100%;
+    left: -140px;
+    transform: rotateY(-90deg);
+}
+
+.lid-right {
+    width: 280px;
+    height: 100%;
+    right: -140px;
+    transform: rotateY(90deg);
+}
+
+/* Ribbon */
+.ribbon-vertical, .ribbon-horizontal {
+    position: absolute;
+    background: oklch(0.95 0.15 50);
+    border: 2px solid oklch(0.85 0.15 50);
+    z-index: 10;
+}
+
+.ribbon-vertical {
+    width: 40px;
+    height: 120%;
+    left: 50%;
+    top: -10%;
+    transform: translateX(-50%) translateZ(141px);
+}
+
+.ribbon-horizontal {
+    width: 120%;
+    height: 40px;
+    left: -10%;
+    top: 50%;
+    transform: translateY(-50%) translateZ(141px);
+}
+
+/* Bow */
+.bow {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%) translateZ(142px);
+    z-index: 11;
+}
+
+.bow-left, .bow-right, .bow-center {
+    position: absolute;
+    background: oklch(0.95 0.15 50);
+    border: 2px solid oklch(0.85 0.15 50);
+    border-radius: 50%;
+}
+
+.bow-left {
+    width: 50px;
+    height: 40px;
+    left: -30px;
+    transform: rotate(-20deg);
+}
+
+.bow-right {
+    width: 50px;
+    height: 40px;
+    right: -30px;
+    transform: rotate(20deg);
+}
+
+.bow-center {
+    width: 30px;
+    height: 30px;
+    left: 50%;
+    top: 5px;
+    transform: translateX(-50%);
+}
+
+/* Confetti */
+.confetti-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.confetti-particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: confetti-burst 1s ease-out forwards;
+}
+
+@keyframes confetti-burst {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(
+            calc(-50% + (var(--random-x, 0) * 200px)), 
+            calc(-50% - 300px)
+        ) scale(1);
+        opacity: 0;
+    }
+}
+
+/* Wish Panel */
+.wish-panel {
+    background: linear-gradient(135deg, 
+        oklch(0.99 0.04 340 / 0.9) 0%, 
+        oklch(0.97 0.06 350 / 0.9) 100%);
+    border: 3px solid oklch(0.75 0.18 340);
+    box-shadow: 0 12px 48px oklch(0.65 0.18 340 / 0.25);
+}
+
+.dark .wish-panel {
+    background: linear-gradient(135deg, 
+        oklch(0.3 0.08 340 / 0.9) 0%, 
+        oklch(0.28 0.09 350 / 0.9) 100%);
+    border: 3px solid oklch(0.5 0.15 340);
+}
+
+.wish-title {
+    color: oklch(0.65 0.18 340);
+    line-height: 1.3;
+}
+
+.dark .wish-title {
+    color: oklch(0.85 0.15 340);
+}
+
+.wish-input {
+    border: 3px solid oklch(0.75 0.18 340);
+    background: oklch(1 0 0 / 0.8);
+    transition: all 0.3s ease;
+}
+
+.wish-input:focus {
+    border-color: oklch(0.65 0.18 340);
+    box-shadow: 0 0 0 4px oklch(0.65 0.18 340 / 0.2),
+                0 0 20px oklch(0.65 0.18 340 / 0.4);
+    transform: scale(1.02);
+}
+
+.dark .wish-input {
+    background: oklch(0.35 0.08 340 / 0.8);
+    border-color: oklch(0.5 0.15 340);
+}
+
+.dark .wish-input:focus {
+    border-color: oklch(0.75 0.18 340);
+    box-shadow: 0 0 0 4px oklch(0.75 0.18 340 / 0.2),
+                0 0 20px oklch(0.75 0.18 340 / 0.4);
+}
+
+.send-wish-button {
+    background: linear-gradient(135deg, 
+        oklch(0.7 0.18 340) 0%, 
+        oklch(0.65 0.2 350) 100%);
+    border: none;
+    box-shadow: 0 4px 16px oklch(0.65 0.18 340 / 0.4);
+    transition: all 0.3s ease;
+}
+
+.send-wish-button:hover:not(:disabled) {
+    background: linear-gradient(135deg, 
+        oklch(0.75 0.18 340) 0%, 
+        oklch(0.7 0.2 350) 100%);
+    box-shadow: 0 6px 24px oklch(0.65 0.18 340 / 0.6);
+    transform: translateY(-2px);
+}
+
+.send-wish-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.send-wish-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Footer */
+.footer-section {
+    margin-top: 4rem;
+}
+
+.footer-text {
+    color: oklch(0.5 0.12 340);
+    font-weight: 600;
+}
+
+.dark .footer-text {
+    color: oklch(0.8 0.12 340);
+}
+
+/* Animations */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.6s ease-out forwards;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .gift-box:hover {
+        transform: none;
+    }
+    
+    .icon:hover {
+        transform: none;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .gift-box {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .box-left, .box-right, .lid-left, .lid-right {
+        width: 220px;
+    }
+    
+    .box-front, .box-back {
+        transform: translateZ(110px);
+    }
+    
+    .box-back {
+        transform: translateZ(-110px) rotateY(180deg);
+    }
+    
+    .box-bottom {
+        height: 220px;
+        bottom: -110px;
+    }
+    
+    .lid-top {
+        height: 220px;
+        top: -110px;
+    }
+    
+    .lid-front {
+        transform: translateZ(110px);
+    }
+    
+    .lid-back {
+        transform: translateZ(-110px) rotateY(180deg);
+    }
+    
+    .ribbon-vertical {
+        transform: translateX(-50%) translateZ(111px);
+    }
+    
+    .ribbon-horizontal {
+        transform: translateY(-50%) translateZ(111px);
+    }
+    
+    .bow {
+        transform: translateX(-50%) translateZ(112px);
+    }
+}
+
+/* Touch-friendly sizing */
+@media (hover: none) and (pointer: coarse) {
+    .gift-box,
+    .send-wish-button,
+    .icon {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}

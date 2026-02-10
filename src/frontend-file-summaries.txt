@@ -1,0 +1,15 @@
+{
+  "frontend/src/App.tsx": "Main application component that renders the single-page gift site with hero section, caring messages, interactive gift box, and footer in a cohesive layout.",
+  "frontend/src/components/HeartsRain.tsx": "Canvas-based hearts rain animation component that creates gentle falling hearts across the screen with performance optimization and reduced-motion support, now with proper useRef initialization.",
+  "frontend/src/components/CaringMessages.tsx": "Displays the caring message with three inline SVG icons (chocolate, teddy bear, hot water bottle) in a responsive card layout.",
+  "frontend/src/components/GiftBox.tsx": "Interactive 3D-style pink gift box component with open/close animation, confetti burst effect, and integration with the wish panel.",
+  "frontend/src/components/WishPanel.tsx": "Revealed content panel showing congratulatory text, glowing wish input field, send button, and response message with localStorage persistence.",
+  "frontend/src/components/FireworksCanvas.tsx": "Canvas-based fireworks animation component that creates colorful particle bursts when a wish is sent, with reduced-motion support and proper useRef initialization.",
+  "frontend/src/components/Footer.tsx": "Simple footer component displaying the signature text with name, heart emoji, and date.",
+  "frontend/src/hooks/useLocalStorage.ts": "Custom React hook for persisting and retrieving values from browser localStorage with error handling.",
+  "frontend/src/index.css": "Complete styling system with pastel-pink OKLCH color palette, Google Fonts integration, 3D gift box styles, animations, and responsive design for both light and dark modes.",
+  "frontend/index.html": "HTML entry point with static title set to \"Cutiepie\" for pre-hydration display.",
+  "frontend/tailwind.config.js": "Tailwind configuration extended with custom font families (Fredoka One for headings, Poppins for body) matching the cute aesthetic.",
+  "frontend/src/appDomain.ts": "Exports the app domain constant \"Cutiepie\" and a validation function that enforces 5-50 character length and allows only letters, numbers, and hyphens.",
+  "frontend/src/main.tsx": "Application entry point that validates the app domain on startup, sets document.title dynamically, and wraps the app with QueryClient and InternetIdentity providers."
+}

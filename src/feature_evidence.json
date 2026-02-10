@@ -1,0 +1,24 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-update-the-project-app-domain-name-to-cutiepie-letters-only-5-50-characters-no-underscores-and-rerun-the-publish-deployment-so-the-site-is-published-successfully-under-that-domain",
+      "featureTitle": "Update the project/app domain name to \"Cutiepie\" (letters only; 5–50 characters; no underscores) and rerun the publish/deployment so the site is published successfully under that domain.",
+      "files": [
+        "frontend/index.html",
+        "frontend/src/appDomain.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-10"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

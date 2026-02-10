@@ -1,0 +1,47 @@
+{
+  "kind": "build_request",
+  "title": "Update app domain to Cutiepie and republish",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-10",
+      "text": "Update the project/app domain name to \"Cutiepie\" (letters only; 5–50 characters; no underscores) and rerun the publish/deployment so the site is published successfully under that domain.",
+      "target": "unknown",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "change domain with Cutiepie and publish it."
+        ]
+      },
+      "acceptanceCriteria": [
+        "The configured app domain is exactly \"Cutiepie\".",
+        "Domain validation passes (contains only letters, numbers, and hyphens; length 5–50).",
+        "A publish/deployment run completes successfully without domain validation errors."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not use underscores in the domain; domain must be 5–50 characters and contain only letters, numbers, and hyphens.",
+    "Do not modify any immutable frontend paths listed in SYSTEM_CONTEXT."
+  ],
+  "nonGoals": [
+    "No UI/UX changes to the gift page content or styling.",
+    "No changes to backend canister APIs beyond what is required for publish to succeed."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

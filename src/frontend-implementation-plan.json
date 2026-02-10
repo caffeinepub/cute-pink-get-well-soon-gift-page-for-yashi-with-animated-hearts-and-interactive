@@ -1,0 +1,33 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Set app domain to Cutiepie (frontend config)",
+  "requirements": [
+    {
+      "id": "REQ-10",
+      "summary": "Configure the app/domain name as \"Cutiepie\" in frontend-visible configuration and ensure it passes the domain validation rules used by the app during startup.",
+      "acceptanceCriteria": [
+        "The configured app domain is exactly \"Cutiepie\".",
+        "Domain validation passes (contains only letters, numbers, and hyphens; length 5–50).",
+        "A publish/deployment run completes successfully without domain validation errors."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/appDomain.ts",
+          "operation": "create",
+          "description": "Create a single source of truth for the app/domain string set to \"Cutiepie\" along with a small validator enforcing: 5–50 chars, only letters/numbers/hyphens, and no underscores."
+        },
+        {
+          "path": "frontend/src/main.tsx",
+          "operation": "modify",
+          "description": "Import the app/domain constant and validation helper; validate on startup (fail fast with a clear console error if invalid) and set document.title to \"Cutiepie\" so the published app reflects the configured domain name."
+        },
+        {
+          "path": "frontend/index.html",
+          "operation": "modify",
+          "description": "Update the static <title> to \"Cutiepie\" to match the configured app/domain name for environments where JS is disabled or before hydration."
+        }
+      ]
+    }
+  ]
+}

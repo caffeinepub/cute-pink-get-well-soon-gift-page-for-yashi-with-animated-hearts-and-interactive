@@ -1,2 +1,3 @@
-# cute-pink-get-well-soon-gift-page-for-yashi-with-animated-hearts-and-interactive
-Exported from Caffeine project: Cute pink “Get Well Soon” gift page for Yashi with animated hearts and interactive wish gift box
+## 
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`

@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 7,
+  "summary": "Pink-themed \"Get Well Soon\" gift webpage for Yashi; deployment/publish flow now includes an Internet Computer-style backend canister where backend/main.mo must define a minimal actor interface (health-check) so the frontend build pipeline (useActor.ts) can generate/use the Candid interface successfully.",
+  "architectural_notes": [
+    "Deliver as a single self-contained index.html with embedded CSS and JavaScript.",
+    "Only external dependency allowed: Google Fonts (optionally lightweight CDN animation assets if needed).",
+    "Persist the entered wish using localStorage so it survives refresh.",
+    "Design must be fully responsive and touch-friendly for mobile/desktop.",
+    "If using a backend canister, backend/main.mo must not be empty; it must define an actor interface (e.g., a simple getHealth() query) so the Candid interface can be generated/consumed by the frontend build pipeline (useActor.ts)."
+  ],
+  "known_issues": [
+    "Publish/deployment failing with configuration error because backend/main.mo is empty while the frontend build pipeline (useActor.ts) expects a valid actor/Candid interface.",
+    "Publish blocked by domain validation: domain must be 5–50 characters and contain only letters, numbers, and hyphens (previous domain \"Cutie_Pie\" invalid due to underscore)."
+  ],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-create-a-single-page-mobile-first-react-ui-that-visually-matches-a-cute-pastel-pink-get-well-soon-gift-site-dedicated-to-yashi-including-a-cozy-background-clouds-blanket-like-gradient-hearts-flowers-motif-gentle-sparkles-and-consistently-applied-playful-typography-using-google-fonts-e-g-fredoka-one-poppins",
+      "title": "Create a single-page, mobile-first React UI that visually matches a cute pastel-pink “Get Well Soon” gift site dedicated to Yashi, including a cozy background (clouds/blanket-like gradient), hearts/flowers motif, gentle sparkles, and consistently applied playful typography using Google Fonts (e.g., Fredoka One + Poppins).",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-the-hero-section-with-prominent-headline-text-exactly-hey-yashi-cutiepie-sending-you-all-the-hugs-and-add-an-animated-hearts-raining-down-effect-that-feels-gentle-non-distracting-performs-smoothly-on-mobile-and-respects-reduced-motion-preferences",
+      "title": "Implement the hero section with prominent headline text exactly: “Hey Yashi, CutiePie 🌸 Sending you all the hugs!💕” and add an animated “hearts raining down” effect that feels gentle (non-distracting), performs smoothly on mobile, and respects reduced-motion preferences.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-caring-messages-section-containing-the-message-exactly-rest-up-eat-chocolate-binge-your-faves-i-ve-got-you-and-display-three-cute-icons-chocolate-teddy-bear-hot-water-bottle-alongside-the-message-using-lightweight-inline-svg-css-no-heavy-icon-dependencies",
+      "title": "Add a “caring messages” section containing the message exactly: “Rest up, eat chocolate, binge your faves. I've got you! 😘” and display three cute icons (chocolate, teddy bear, hot water bottle) alongside the message using lightweight inline SVG/CSS (no heavy icon dependencies).",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-interactive-center-3d-style-pink-gift-box-with-ribbon-and-bow-on-hover-desktop-and-on-tap-click-mobile-animate-the-box-opening-with-a-smooth-flip-unfold-animation-and-trigger-a-confetti-burst-from-inside-the-box",
+      "title": "Create an interactive center “3D-style” pink gift box with ribbon and bow. On hover (desktop) and on tap/click (mobile), animate the box opening with a smooth flip/unfold animation and trigger a confetti burst from inside the box.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-when-the-gift-box-is-open-reveal-the-text-exactly-congratulations-yashi-you-have-got-one-wish-to-ask-my-lady-followed-by-a-glowing-wish-input-field-and-a-send-wish-button-the-input-must-be-touch-friendly-clearly-legible-and-visually-styled-to-match-the-theme",
+      "title": "When the gift box is open, reveal the text exactly: “Congratulations Yashi! 🎉✨ You have got ONE WISH to ask! MY LADY? 💖”, followed by a glowing wish input field and a “Send Wish” button. The input must be touch-friendly, clearly legible, and visually styled to match the theme.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-on-send-wish-trigger-a-lightweight-fireworks-animation-e-g-canvas-based-particles-and-display-the-response-message-exactly-your-wish-is-my-command-i-ll-make-it-happen-asap-persist-the-wish-in-localstorage-and-restore-it-on-refresh-including-restoring-the-input-value-and-a-visible-indication-that-a-wish-was-saved",
+      "title": "On “Send Wish”, trigger a lightweight fireworks animation (e.g., canvas-based particles) and display the response message exactly: “Your wish is my command! I'll make it happen ASAP ! 🥰”. Persist the wish in localStorage and restore it on refresh (including restoring the input value and a visible indication that a wish was saved).",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-page-is-fully-responsive-and-fast-loading-optimize-animations-for-performance-avoid-heavy-external-dependencies-no-third-party-libraries-except-google-fonts-and-ensure-touch-targets-are-appropriately-sized-for-mobile-users",
+      "title": "Ensure the page is fully responsive and fast-loading: optimize animations for performance, avoid heavy external dependencies (no third-party libraries except Google Fonts), and ensure touch targets are appropriately sized for mobile users.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-footer-text-exactly-this-is-herryn-feb-2026-and-style-it-to-match-the-overall-cute-pastel-theme-without-distracting-from-the-main-interactions",
+      "title": "Add the footer text exactly: “This is [Herryn] ❤️ Feb 2026” and style it to match the overall cute pastel theme without distracting from the main interactions.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-project-app-domain-name-to-cutiepie-letters-only-5-50-characters-no-underscores-and-rerun-the-publish-deployment-so-the-site-is-published-successfully-under-that-domain",
+      "title": "Update the project/app domain name to \"Cutiepie\" (letters only; 5–50 characters; no underscores) and rerun the publish/deployment so the site is published successfully under that domain.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Build a complete single-file HTML (embedded CSS/JS) pink pastel \"Get Well Soon\" gift site for Yashi featuring animated hero with raining hearts, caring message section with cute icons, interactive 3D-style gift box that opens with confetti to reveal a wish input + Send button triggering fireworks and storing wish in localStorage, fully responsive/touch-friendly, Google Fonts, and footer signature/date.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Fix publish configuration error by replacing backend/main.mo with a minimal Motoko actor exposing a query getHealth() function so a valid Candid interface is generated for the frontend (useActor.ts).",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Replace the entire contents of backend/main.mo with the provided Motoko actor that exposes a public query getHealth() : async Text returning \"System Operational\", so the canister compiles and a valid Candid interface is generated for the frontend actor typing (used by frontend/src/hooks/useActor.ts).",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Update the project/app domain name to \"Cutiepie\" (to satisfy domain validation rules) and rerun the publish/deployment.",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Cute pink “Get Well Soon” gift page for Yashi with animated hearts and interactive wish gift box",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
